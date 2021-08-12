@@ -144,6 +144,7 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -175,6 +176,7 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -199,6 +201,7 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -229,6 +232,7 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -258,6 +262,7 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -546,6 +551,26 @@ class TolinoCloud:
             return j['metadata']['deliverableId']
         except:
             raise TolinoException('file upload failed.')
+
+    def add_cover(self, filename, book_id):
+        s = self.session;
+        c = self.partner_settings[self.partner_id]
+
+        mime = 'image/jpeg'
+
+        r = s.post(c['cover_url'],
+            files = [('file', ('1092560016', open(filename, 'rb'), mime))],
+            data = {'deliverableId': book_id},
+            headers = {
+                't_auth_token' : self.access_token,
+                'hardware_id'  : TolinoCloud.hardware_id,
+                'reseller_id'         : str(self.partner_id)
+            }
+        )
+        self._debug(r)
+        if r.status_code != 200:
+            raise TolinoException('file upload failed.')
+
 
     def delete(self, id):
         s = self.session;
