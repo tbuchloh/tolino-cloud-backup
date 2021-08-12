@@ -1,8 +1,11 @@
-Access to tolino cloud with Python 3
-====================================
+Access to tolino cloud with Python 3 and Calibre
+================================================
 
 **TolinoCloud** is an inofficial implementation of the tolino cloud
 web reader REST API.
+
+This project is a fork that provides a script which will attempt to
+sync everything in your Calibre library to the tolino cloud service.
 
 The *tolino ebook reader* is sold by several different partners, most
 of them based in Germany, e.g. Thalia or Hugendubel.
