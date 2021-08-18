@@ -5,4 +5,3 @@ user =     # your user name at the reseller's web site
 password = # your password
 partner =  # your device's reseller id, use --partner 0 for a full list
 dbpath =   # path to your calibre library
-idfilepath = doc_ids.json # you probably don't need to change this

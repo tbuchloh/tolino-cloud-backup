@@ -144,7 +144,8 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
-            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -176,7 +177,8 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
-            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -201,7 +203,8 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
-            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -232,7 +235,8 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
-            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -262,7 +266,8 @@ class TolinoCloud:
             'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
             'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
-            'cover_url'       : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -552,11 +557,24 @@ class TolinoCloud:
         except:
             raise TolinoException('file upload failed.')
 
-    def add_cover(self, filename, book_id):
+    def add_cover(self, book_id, filename, name = None, ext = None):
         s = self.session;
         c = self.partner_settings[self.partner_id]
 
-        mime = 'image/jpeg'
+        if 'cover_url' not in c:
+            raise TolinoException('no cover url defined for this provider.')
+        
+        if name is None:
+            name = filename.split('/')[-1]
+
+        if ext is None:
+            ext = filename.split('.')[-1]
+        
+        mime = {
+            'png': 'image/png',
+            'jpeg': 'image/jpeg',
+            'jpg': 'image/jpeg'
+        }.get(ext.lower(), 'application/jpeg')
 
         r = s.post(c['cover_url'],
             files = [('file', ('1092560016', open(filename, 'rb'), mime))],
@@ -569,7 +587,75 @@ class TolinoCloud:
         )
         self._debug(r)
         if r.status_code != 200:
-            raise TolinoException('file upload failed.')
+            raise TolinoException('cover upload failed.')
+
+    
+    def metadata(self, book_id, title=None, subtitle=None, author=None, publisher=None, isbn=None, edition=None,
+                issued=None, language=None):
+        s = self.session;
+        c = self.partner_settings[self.partner_id]
+
+        if 'meta_url' not in c:
+            raise TolinoException('no meta url defined for this provider.')
+
+        b = c['meta_url'] + '/?deliverableId={book_id}'.format(book_id=book_id)
+        r = s.get(b,
+                  headers={
+                      't_auth_token': self.access_token,
+                      'hardware_id': TolinoCloud.hardware_id,
+                      'reseller_id': str(self.partner_id)
+                  }
+                  )
+
+        meta = r.json()
+
+        self._debug(r)
+
+        if title is not None:
+            meta['metadata']['title'] = str(title)
+
+        if subtitle is not None:
+            meta['metadata']['subtitle'] = str(subtitle)
+
+        if author is not None:
+            meta['metadata']['author'] = str(author)
+
+        if publisher is not None:
+            meta['metadata']['publisher'] = str(publisher)
+
+        if isbn is not None:
+            meta['metadata']['isbn'] = str(isbn)
+
+        if edition is not None:
+            meta['metadata']['edition'] = int(edition)
+
+        if issued is not None:
+            meta['metadata']['issued'] = datetime.datetime.strptime(issued, "%d.%m.%Y").timestamp()
+
+        if language is not None:
+            meta['metadata']['language'] = str(language)
+
+        payload = {
+            'uploadMetaData': meta['metadata']
+        }
+
+        r = s.put(b,
+                  data=json.dumps(payload),
+                  headers={
+                      'content-type': 'application/json',
+                      't_auth_token': self.access_token,
+                      'hardware_id': TolinoCloud.hardware_id,
+                      'reseller_id': str(self.partner_id)
+                  }
+                  )
+        self._debug(r)
+        if r.status_code != 200:
+            raise TolinoException('meta data update failed.')
+
+        try:
+            return meta['metadata']['deliverableId']
+        except:
+            raise TolinoException('meta data update failed.')
 
 
     def delete(self, id):
