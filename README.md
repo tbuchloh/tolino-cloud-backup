@@ -4,8 +4,11 @@ Access to tolino cloud with Python 3 and Calibre
 **TolinoCloud** is an inofficial implementation of the tolino cloud
 web reader REST API.
 
-This project is a fork that provides a script which will attempt to
-sync everything in your Calibre library to the tolino cloud service.
+**This project** is a fork that uses the tolino API to sync an entire
+Calibre library into the tolino cloud - this includes all books in epub
+format, most of the metadata from the Calibre library that tolino supports,
+the cover images from Calibre, and the creation of a collection in tolino
+for every series created in Calibre.
 
 The *tolino ebook reader* is sold by several different partners, most
 of them based in Germany, e.g. Thalia or Hugendubel.
@@ -36,6 +39,9 @@ to allow scripted access to a few very basic commands:
 - delete an ebook / upload
 - list devices connected to an account
 - unregister a device from an account
+- upload cover images
+- update metadata for a book
+- add books to collections
 
 Status
 ======
@@ -58,7 +64,7 @@ To-Do
 
 Better error handling.
 
-More REST API calls (e.g. meta data edit, cover image upload).
+More REST API calls (e.g. more collection features).
 
 Support for more resellers.
 
