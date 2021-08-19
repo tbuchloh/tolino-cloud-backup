@@ -32,6 +32,7 @@ import re
 from urllib.parse import urlparse, parse_qs
 import logging
 from pprint import pformat
+import time
 
 class TolinoException(Exception):
     pass
@@ -146,6 +147,7 @@ class TolinoCloud:
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
             'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
             'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -179,6 +181,7 @@ class TolinoCloud:
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
             'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
             'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -205,6 +208,7 @@ class TolinoCloud:
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
             'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
             'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -237,6 +241,7 @@ class TolinoCloud:
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
             'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
             'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -268,6 +273,7 @@ class TolinoCloud:
             'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
             'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
             'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
@@ -656,6 +662,45 @@ class TolinoCloud:
             return meta['metadata']['deliverableId']
         except:
             raise TolinoException('meta data update failed.')
+
+
+    def add_to_collection(self, book_id, collection_name):
+        s = self.session;
+        c = self.partner_settings[self.partner_id]
+
+        if 'sync_data_url' not in c:
+            raise TolinoException('no meta url defined for this provider.')
+
+        payload = {
+            "revision":None,
+            "patches":[
+                {
+                    "op":"add",
+                    "value":{
+                        #"revision":None,
+                        "modified":round(time.time() * 1000), #Milliseconds
+                        "name":collection_name,
+                        "category":"collection",
+                        #"transientId":base64.b64encode(collection_name.encode('ascii')).decode('ascii') #was used in legacy web client
+                    },
+                    "path":"/publications/{book_id}/tags".format(book_id=book_id)
+                }
+            ]
+        }
+
+        r = s.patch(c['sync_data_url'],
+                    data=json.dumps(payload),
+                    headers={
+                        'content-type': 'application/json',
+                        't_auth_token': self.access_token,
+                        'hardware_id': TolinoCloud.hardware_id,
+                        'reseller_id': str(self.partner_id),
+                        'client_type': 'TOLINO_WEBREADER'
+                    }
+                )
+        self._debug(r)
+        if r.status_code != 200:
+            raise TolinoException('collection update failed.')
 
 
     def delete(self, id):
