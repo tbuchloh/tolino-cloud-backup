@@ -26,7 +26,6 @@ def upload_cover(db, c, book, doc_id):
 def update_meta(db, c, book, doc_id):
     global meta_cnt
     global failed_meta_cnt
-    # Add the cover
     try:
         local_meta = db.get_metadata(book)
 
@@ -34,9 +33,20 @@ def update_meta(db, c, book, doc_id):
             isbn=local_meta.identifiers['isbn'] if 'isbn' in local_meta.identifiers else None)
         meta_cnt += 1
     except TolinoException:
-        # The file is probably too large, not sure what to do about that
-        logger.warning("Error uploading cover for %s"%local_meta.title)
+        logger.warning("Error updating meta for %s"%local_meta.title)
         failed_meta_cnt += 1
+
+def update_collections(db, c, book, doc_id):
+    global collection_cnt
+    global failed_collection_cnt
+    try:
+        local_meta = db.get_metadata(book)
+        if local_meta.series != None:
+            c.add_to_collection(doc_id, local_meta.series)
+            collection_cnt += 1
+    except TolinoException:
+        logger.warning("Error updating collections for %s"%local_meta.title)
+        failed_collection_cnt += 1
 
 def upload_book(db, c, book):
     global book_cnt
@@ -51,6 +61,7 @@ def upload_book(db, c, book):
         # Instantly persist, in case something goes horribly wrong or we get Ctrl-C-ed
         upload_cover(db, c, book, doc_id)
         update_meta(db, c, book, doc_id)
+        update_collections(db, c, book, doc_id)
     except TolinoException:
         logger.error("Error uploading book for %s"%local_meta.title)
         failed_book_cnt += 1
@@ -81,6 +92,7 @@ parser.add_argument('--dbpath', metavar='FILE', help='path of calibre database')
 parser.add_argument('--debug', action="store_true", help='log additional debugging info')
 parser.add_argument('--force-covers', action="store_true", help='forcibly update covers for existing books')
 parser.add_argument('--force-meta', action="store_true", help='forcibly update meta for existing books')
+parser.add_argument('--force-collections', action="store_true", help='forcibly update collections for existing books')
 
 args = parser.parse_args(remaining_argv)
 
@@ -89,9 +101,11 @@ db = db(args.dbpath).new_api
 book_cnt = 0
 cover_cnt = 0
 meta_cnt = 0
+collection_cnt = 0
 failed_book_cnt = 0
 failed_cover_cnt = 0
 failed_meta_cnt = 0
+failed_collection_cnt = 0
 no_epub_cnt = 0
 ignored_cnt = 0
 
@@ -128,12 +142,15 @@ for book in local:
         if args.force_meta:
             logger.info("Forcibly updating meta for %s by %s"%(local_meta.title, local_meta.authors))
             update_meta(db, c, book, doc_id)
+        if args.force_collections:
+            logger.info("Forcibly updating collections for %s by %s"%(local_meta.title, local_meta.authors))
+            update_collections(db, c, book, doc_id)
 
 
 c.unregister()
 c.logout()
 
 # Print stats
-logger.info("Uploaded %d new books, %d new covers, and %d sets of metadata."%(book_cnt, cover_cnt, meta_cnt))
-logger.info("Failed to upload %d books, %d covers, and %d sets of metadata."%(failed_book_cnt, failed_cover_cnt, failed_meta_cnt))
+logger.info("Uploaded %d new books, %d new covers, %d sets of metadata, and %d collection tags."%(book_cnt, cover_cnt, meta_cnt, collection_cnt))
+logger.info("Failed to upload %d books, %d covers, %d sets of metadata, and %d collection tags."%(failed_book_cnt, failed_cover_cnt, failed_meta_cnt, failed_collection_cnt))
 logger.info("Ignored %d already uploaded books, and %d books with no epub format."%(ignored_cnt, no_epub_cnt))
