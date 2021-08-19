@@ -50,6 +50,9 @@ complete -c $PROG -n '__fish_tolino_needs_command' -a 'download'   -d 'Download 
 complete -c $PROG -n '__fish_tolino_needs_command' -a 'delete'     -d 'Delete a document (be careful!)'
 complete -c $PROG -n '__fish_tolino_needs_command' -a 'devices'    -d 'List devices registered to cloud account'
 complete -c $PROG -n '__fish_tolino_needs_command' -a 'unregister' -d 'Unregister device from cloud account (be careful!)'
+complete -c $PROG -n '__fish_tolino_needs_command' -a 'cover'      -d 'Upload a cover (must be .jpg or .png)'
+complete -c $PROG -n '__fish_tolino_needs_command' -a 'meta'       -d 'Update metadata for a book'
+complete -c $PROG -n '__fish_tolino_needs_command' -a 'add-to-collection' -d 'Add a book to a collection'
 
 # Options and flags
 complete -c $PROG -s h -l help -d 'Show help message and exit'
