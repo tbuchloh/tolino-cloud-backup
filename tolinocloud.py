@@ -636,7 +636,7 @@ class TolinoCloud:
             meta['metadata']['edition'] = int(edition)
 
         if issued is not None:
-            meta['metadata']['issued'] = datetime.datetime.strptime(issued, "%d.%m.%Y").timestamp()
+            meta['metadata']['issued'] = issued.timestamp()
 
         if language is not None:
             meta['metadata']['language'] = str(language)

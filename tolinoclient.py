@@ -11,6 +11,7 @@ import sys
 import datetime
 import logging
 from os.path import expanduser
+import datetime
 
 from tolinocloud import TolinoCloud
 
@@ -96,6 +97,8 @@ def meta(args):
     c = TolinoCloud(args.partner)
     c.login(args.user, args.password)
     c.register()
+    if args.issued != None:
+        datetime.datetime.strptime(args.issued, "%d.%m.%Y")
     c.metadata(args.document_id, args.title, args.subtitle, args.author, args.publisher, args.isbn, args.edition, args.issued, args.language)
     c.unregister()
     c.logout()
