@@ -30,7 +30,8 @@ def update_meta(db, c, book, doc_id):
         local_meta = db.get_metadata(book)
 
         c.metadata(doc_id, title=local_meta.title, author=', '.join(local_meta.authors), publisher=local_meta.publisher,
-            isbn=local_meta.identifiers['isbn'] if 'isbn' in local_meta.identifiers else None)
+            isbn=local_meta.identifiers['isbn'] if 'isbn' in local_meta.identifiers else None, issued=local_meta.pubdate,
+            language=local_meta.languages[0] if len(local_meta.languages)>0 else None)
         meta_cnt += 1
     except TolinoException:
         logger.warning("Error updating meta for %s"%local_meta.title)
@@ -66,8 +67,6 @@ def upload_book(db, c, book):
         logger.error("Error uploading book for %s"%local_meta.title)
         failed_book_cnt += 1
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
 
 parser = argparse.ArgumentParser(
     description='cmd line client to access personal tolino cloud storage space.'
@@ -95,6 +94,12 @@ parser.add_argument('--force-meta', action="store_true", help='forcibly update m
 parser.add_argument('--force-collections', action="store_true", help='forcibly update collections for existing books')
 
 args = parser.parse_args(remaining_argv)
+
+if args.debug:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger()
 
 # Initialise DB and counters
 db = db(args.dbpath).new_api
