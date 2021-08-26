@@ -88,6 +88,7 @@ parser.add_argument('--user', type=str, help='username (usually an email address
 parser.add_argument('--password', type=str, help='password')
 parser.add_argument('--partner', type=int, help='shop / partner id (use 0 for list)')
 parser.add_argument('--dbpath', metavar='FILE', help='path of calibre database')
+parser.add_argument('--libpath', metavar='FILE', help='path of system python dist-packages')
 parser.add_argument('--debug', action="store_true", help='log additional debugging info')
 parser.add_argument('--force-covers', action="store_true", help='forcibly update covers for existing books')
 parser.add_argument('--force-meta', action="store_true", help='forcibly update meta for existing books')
@@ -119,7 +120,7 @@ local = db.search('')
 
 # Connect and gather list of books online - mainly to ensure IDs from cache file
 # are still valid, otherwise re-upload
-c = TolinoCloud(args.partner)
+c = TolinoCloud(args.partner, args.libpath)
 c.login(args.user, args.password)
 c.register()
 remote = c.inventory()

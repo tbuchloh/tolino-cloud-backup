@@ -5,3 +5,4 @@ user =     # your user name at the reseller's web site
 password = # your password
 partner =  # your device's reseller id, use --partner 0 for a full list
 dbpath =   # path to your calibre library
+libpath = /usr/lib/python3/dist-packages # path to a python installation that has the requests library - needed to work with Calibre binary release

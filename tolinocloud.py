@@ -27,12 +27,12 @@
 import platform
 import json
 import base64
-import requests
 import re
 from urllib.parse import urlparse, parse_qs
 import logging
 from pprint import pformat
 import time
+import sys
 
 class TolinoException(Exception):
     pass
@@ -280,7 +280,9 @@ class TolinoCloud:
         }
     }
 
-    def __init__(self, partner_id):
+    def __init__(self, partner_id, libpath):
+        sys.path.append(libpath)
+        import requests
         self.partner_id = partner_id
         self.session = requests.session()
 
