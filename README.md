@@ -54,6 +54,7 @@ Works with these partners:
 - Buch.de (6)
 - books.ch / orellfuessli.ch (8)
 - Hugendubel.de (13)
+- Osiander.de (23)
 - Buecher.de (30)
 
 (More may be added in the future.)

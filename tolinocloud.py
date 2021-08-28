@@ -109,6 +109,7 @@ class TolinoCloud:
         20 : 'derclub.de',
         21 : 'otto-media.de',
         22 : 'donauland.at',
+        23 : 'osiander.de',
         30 : 'bücher.de',
         40 : 'Bild.de', # defunct?
         60 : 'StandaardBoekhandel.be',
@@ -215,37 +216,37 @@ class TolinoCloud:
             },
         8: {
             # books.ch / orellfuessli.ch
-            'client_id': 'webreader',
-            'scope': 'SCOPE_BOSH',
-            'signup_url': 'https://www.orellfuessli.ch/registrierung/privatkunde',
-            'profile_url': 'https://www.orellfuessli.ch/shop/home/kunde/',
-            'token_url': 'https://www.orellfuessli.ch/auth/oauth2/token',
-            'login_form_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/login',
-            'x_buchde.skin_id': '17',
+            'client_id'        : 'webreader',
+            'scope'            : 'SCOPE_BOSH',
+            'signup_url'       : 'https://www.orellfuessli.ch/registrierung/privatkunde',
+            'profile_url'      : 'https://www.orellfuessli.ch/shop/home/kunde/',
+            'token_url'        : 'https://www.orellfuessli.ch/auth/oauth2/token',
+            'login_form_url'   : 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/login',
+            'x_buchde.skin_id' : '17',
             'x_buchde.mandant_id': '37',
-            'auth_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/authorize',
-            'login_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/login.do',
-            'revoke_url': 'https://www.orellfuessli.ch//auth/oauth2/revoke',
+            'auth_url'         : 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/authorize',
+            'login_url'        : 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/login.do',
+            'revoke_url'       : 'https://www.orellfuessli.ch//auth/oauth2/revoke',
             'login_form': {
-                'username': 'j_username',
-                'password': 'j_password',
-                'extra': {
-                    'login': ''
+                'username'  : 'j_username',
+                'password'  : 'j_password',
+                'extra'     : {
+                    'login' : ''
                 }
             },
-            'login_cookie': 'OAUTH-JSESSIONID',
-            'logout_url': 'https://www.orellfuessli.ch/shop/home/login/logout/',
-            'reader_url': 'https://webreader.mytolino.com/library/index.html#/mybooks/titles',
-            'register_url': 'https://bosh.pageplace.de/bosh/rest/v2/registerhw',
-            'devices_url': 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
-            'unregister_url': 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
-            'upload_url': 'https://bosh.pageplace.de/bosh/rest/upload',
-            'delete_url': 'https://bosh.pageplace.de/bosh/rest/deletecontent',
-            'inventory_url': 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
-            'meta_url': 'https://bosh.pageplace.de/bosh/rest/meta',
-            'cover_url': 'https://bosh.pageplace.de/bosh/rest/cover',
+            'login_cookie'     : 'OAUTH-JSESSIONID',
+            'logout_url'       : 'https://www.orellfuessli.ch/shop/home/login/logout/',
+            'reader_url'       : 'https://webreader.mytolino.com/library/index.html#/mybooks/titles',
+            'register_url'     : 'https://bosh.pageplace.de/bosh/rest/v2/registerhw',
+            'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
+            'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
+            'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
+            'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
             'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
-            'downloadinfo_url': 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
+            'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
         },
         13: {
             # Hugendubel.de
@@ -279,6 +280,34 @@ class TolinoCloud:
             'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
+        },
+        23: {
+            # osiander.de
+            'client_id'        : 'webreader',
+            'scope'            : 'SCOPE_BOSH',
+            'token_url'        : 'https://www.osiander.de/auth/oauth2/token',
+            'login_form_url'   : 'https://www.osiander.de/de.thalia.ecp.authservice.application/oauth2/login',
+            'x_buchde.skin_id' : '17',
+            'x_buchde.mandant_id' : '51',
+            'auth_url'         : 'https://www.osiander.de/de.thalia.ecp.authservice.application/oauth2/authorize',
+            'login_url'        : 'https://www.osiander.de/de.thalia.ecp.authservice.application/login.do',
+            'login_form'       : {
+                'username' : 'j_username',
+                'password' : 'j_password',
+                'extra'    : {
+                    'login' : ''
+                    }
+             },
+            'login_cookie'     : 'OAUTH-JSESSIONID',
+            'revoke_url'       : 'https://www.osiander.de/auth/oauth2/revoke',
+            'reader_url'       : 'https://webreader.mytolino.com/library/index.html#/mybooks/titles',
+            'register_url'     : 'https://bosh.pageplace.de/bosh/rest/v2/registerhw',
+            'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
+            'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
+            'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
+            'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
+            'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest/cloud/downloadinfo/{}/{}/type/external-download'
         },
         30: {
             # buecher.de
@@ -431,7 +460,7 @@ class TolinoCloud:
 
         # Register our hardware
         r = s.post(c['register_url'],
-              data = json.dumps({'hardware_name':'other'}),
+              data = json.dumps({'hardware_name':'tolino sync reader'}),
               headers = {
                 'content-type': 'application/json',
                 't_auth_token': self.access_token,
