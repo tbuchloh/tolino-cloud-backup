@@ -36,7 +36,9 @@ function __fish_tolino_partners
   echo "0	List partners"
   echo "3	thalia.de"
   echo "6	buch.de"
+  echo "8 book.ch / orellfuessli.ch"
   echo "13	hugendubel.de"
+  echo "30	buecher.de"
 end
 
 # Init

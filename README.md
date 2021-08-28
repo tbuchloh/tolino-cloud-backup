@@ -52,12 +52,13 @@ Works with these partners:
 - Thalia.de (3)
 - Thalia.at (4)
 - Buch.de (6)
+- books.ch / orellfuessli.ch (8)
 - Hugendubel.de (13)
 - Buecher.de (30)
 
 (More may be added in the future.)
 
-Tested with Linux, only. Patches welcome. Handle with care.
+Tested with Linux and Windows. Patches welcome. Handle with care.
 
 To-Do
 =====
@@ -80,5 +81,5 @@ If you like command line completion [fish](https://fishshell.com/), you can copy
 License
 =======
 
-**TolinoCloud** is distributed under the terms of the
+**tolino-calibre-sync** is distributed under the terms of the
 [GNU Lesser General Public License 2.1](http://www.gnu.org/licenses/lgpl-2.1.txt).

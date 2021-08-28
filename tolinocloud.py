@@ -101,7 +101,7 @@ class TolinoCloud:
          5 : 'Thalia.ch',
          6 : 'Buch.de',
          7 : 'buch.ch',
-         8 : 'Books.ch',
+         8 : 'Books.ch / orellfuessli.ch',
         10 : 'Weltbild.de',
         11 : 'Weltbild.at',
         12 : 'Weltbild.ch',
@@ -213,6 +213,40 @@ class TolinoCloud:
             'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
             },
+        8: {
+            # books.ch / orellfuessli.ch
+            'client_id': 'webreader',
+            'scope': 'SCOPE_BOSH',
+            'signup_url': 'https://www.orellfuessli.ch/registrierung/privatkunde',
+            'profile_url': 'https://www.orellfuessli.ch/shop/home/kunde/',
+            'token_url': 'https://www.orellfuessli.ch/auth/oauth2/token',
+            'login_form_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/login',
+            'x_buchde.skin_id': '17',
+            'x_buchde.mandant_id': '37',
+            'auth_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/oauth2/authorize',
+            'login_url': 'https://www.orellfuessli.ch/de.thalia.ecp.authservice.application/login.do',
+            'revoke_url': 'https://www.orellfuessli.ch//auth/oauth2/revoke',
+            'login_form': {
+                'username': 'j_username',
+                'password': 'j_password',
+                'extra': {
+                    'login': ''
+                }
+            },
+            'login_cookie': 'OAUTH-JSESSIONID',
+            'logout_url': 'https://www.orellfuessli.ch/shop/home/login/logout/',
+            'reader_url': 'https://webreader.mytolino.com/library/index.html#/mybooks/titles',
+            'register_url': 'https://bosh.pageplace.de/bosh/rest/v2/registerhw',
+            'devices_url': 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
+            'unregister_url': 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
+            'upload_url': 'https://bosh.pageplace.de/bosh/rest/upload',
+            'delete_url': 'https://bosh.pageplace.de/bosh/rest/deletecontent',
+            'inventory_url': 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
+            'meta_url': 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url': 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
+            'downloadinfo_url': 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
+        },
         13: {
             # Hugendubel.de
             'client_id'        : '4c20de744aa8b83b79b692524c7ec6ae',
@@ -280,7 +314,7 @@ class TolinoCloud:
         }
     }
 
-    def __init__(self, partner_id, libpath):
+    def __init__(self, partner_id, libpath=''):
         sys.path.append(libpath)
         import requests
         self.partner_id = partner_id
