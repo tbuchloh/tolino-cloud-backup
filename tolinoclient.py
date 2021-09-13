@@ -130,7 +130,7 @@ parser.add_argument('--config', metavar='FILE', default='~/.tolinoclientrc', hel
 args, remaining_argv = parser.parse_known_args()
 
 if args.config:
-    c = configparser.ConfigParser()
+    c = configparser.ConfigParser(strict=False, interpolation=None)
     c.read([expanduser(args.config)])
     if c.has_section('Defaults'):
         defaults = dict(c.items('Defaults'))

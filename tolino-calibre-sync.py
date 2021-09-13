@@ -75,7 +75,7 @@ parser.add_argument('--config', metavar='FILE', default='.tolinoclientrc', help=
 args, remaining_argv = parser.parse_known_args()
 
 # Load config
-confparse = configparser.ConfigParser()
+confparse = configparser.ConfigParser(strict=False, interpolation=None)
 path = '.tolinoclientrc'
 if args.config:
     path = args.config
