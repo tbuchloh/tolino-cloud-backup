@@ -27,6 +27,21 @@ Users can manage their purchased ebooks and uploads through a web
 interface, the tolino web reader, which is a HTML5/javascript
 application within the user's browser.
 
+Getting started with syncing your library
+=========================================
+Setting this script up currently requires some added preparation, this will
+hopefully improve in the future.  A full Calibre installation is required, as well as a
+Python installation with the requests module installed.  On Windows, installing
+Python 3.9 from the Windows Store is probably the easiest option.  requests can be installed using the following command:
+```
+pip install requests
+```
+Afterwards, download or git clone this repository to a location of your choice.  Rename tolinoclientrc to .tolinoclientrc, then adjust the values in it using any text editor - user and password are your credentials with your tolino reseller, partner is your reseller's ID (see further down this document for a list of IDs). Set dbpath to the full path to your Calibre Library, and libpath to the Python installation you set up earlier - on Windows, this is probably C:\Users\YOURNAME\AppData\Local\Programs\Python\Python39\Lib\site-packages (substitute your username), on Linux it is likely /usr/lib/python3/dist-packages, but may vary depending on the distribution.  Now open a terminal in the directory you unpacked tolino-calibre-sync (on Windows, Shift+right click, then select "Open PowerShell Window here") and type
+```
+calibre-debug tolino-calibre-sync.py --
+```
+and hopefully, you'll see tolino-calibre-sync going through your library one by one and uploading them to the tolino cloud.  On subsequent runs only books that were added to Calibre or removed from tolino will be uploaded again.  If you changed things in your Calibre library (replaced covers, changed any metadata except the title, or created a series), you may want to use the --force-covers, --force-meta, or --force-collections flags - in that case, just append them to the command after the --, but be aware that doing so will likely mess up your tolino's order of "recent" books as all books that had their data updated (even if it did not change) will be brought to the front.  Also keep in mind that the full title is currently the only thing used to match books to their counterparts in the tolino cloud, so changing the title will spawn duplicates and two books with the exact same title cannot coexist.
+
 Command line client to tolino cloud
 ===================================
 
