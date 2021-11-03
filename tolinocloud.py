@@ -343,11 +343,12 @@ class TolinoCloud:
         }
     }
 
-    def __init__(self, partner_id, libpath=''):
+    def __init__(self, partner_id, use_device=False, libpath=''):
         sys.path.append(libpath)
         import requests
         self.partner_id = partner_id
         self.session = requests.session()
+        self.use_device = use_device
 
     def _debug(self, r):
         if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
@@ -363,6 +364,11 @@ class TolinoCloud:
             logging.debug('-------------------------------------------------------')
 
     def login(self, username, password):
+        if self.use_device:
+            TolinoCloud.hardware_id = username
+            self.access_token = password
+            return
+
         s = self.session;
         c = self.partner_settings[self.partner_id]
 
@@ -433,6 +439,8 @@ class TolinoCloud:
                 raise TolinoException('oauth access token request failed.')
 
     def logout(self):
+        if self.use_device:
+            return
         s = self.session;
         c = self.partner_settings[self.partner_id]
 
@@ -455,6 +463,8 @@ class TolinoCloud:
 
 
     def register(self):
+        if self.use_device:
+            return
         s = self.session;
         c = self.partner_settings[self.partner_id]
 
@@ -476,6 +486,8 @@ class TolinoCloud:
             raise TolinoException('register {} failed.'.format(TolinoCloud.hardware_id))
 
     def unregister(self, device_id = hardware_id):
+        if self.use_device:
+            return
         s = self.session;
         c = self.partner_settings[self.partner_id]
 
@@ -845,3 +857,6 @@ class TolinoCloud:
             f.flush()
 
         return filename
+
+    def set_token(self, token):
+        self.access_token = token

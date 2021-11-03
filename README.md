@@ -68,13 +68,28 @@ Works with these partners:
 - Thalia.at (4)
 - Buch.de (6)
 - books.ch / orellfuessli.ch (8)
-- Hugendubel.de (13)
+- Hugendubel.de (13) (currently non-functional)
 - Osiander.de (23)
 - Buecher.de (30)
 
 (More may be added in the future.)
 
 Tested with Linux and Windows. Patches welcome. Handle with care.
+
+Workaround for auth issues
+=====
+Currently, some tolino providers are usiing heavy-handed bot blocking
+on their authentication servers.  This will break this script.  As a
+workaround, I implemented a method to use existing auth credentials
+instead of having the script sign in itself.  To do this, open the web
+reader, and *before* you sign in, open "Inspect element" and go to the
+network tab.  Now sign in as normal, then search for the request to
+a document called "registerhw" (most browsers have a search field at the
+top).  Click that request, scroll down to "request headers", and use
+the content of "hardware_id" as the user name, and "t_auth_token" as the
+password.  Also set use_device = true in the configuration, and make sure
+to use the correct partner ID you used to sign in.  Do not sign out in the
+browser.  tolino-calibre-sync will now use this session to synchronise.
 
 To-Do
 =====
