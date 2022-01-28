@@ -121,7 +121,7 @@ class TolinoCloud:
     partner_settings = {
         3: {
             # Thalia.de
-            'client_id'        : 'webshop01',
+            'client_id'        : 'webreader',
             'scope'            : 'SCOPE_BOSH',
             'signup_url'       : 'https://www.thalia.de/shop/home/kunde/neu/',
             'profile_url'      : 'https://www.thalia.de/shop/home/kunde/',
@@ -364,13 +364,30 @@ class TolinoCloud:
             logging.debug('-------------------------------------------------------')
 
     def login(self, username, password):
+        s = self.session
+        c = self.partner_settings[self.partner_id]
+
         if self.use_device:
             TolinoCloud.hardware_id = username
-            self.access_token = password
-            return
+            if self.partner_id == 80:
+                self.access_token = password
+                return
 
-        s = self.session;
-        c = self.partner_settings[self.partner_id]
+            r = s.post(c['token_url'], data = {
+                'client_id'    : c['client_id'],
+                'grant_type'   : 'refresh_token',
+                'refresh_token': password,
+                'scope'        : c['scope'],
+                }, verify=True, allow_redirects=False)
+            self._debug(r)
+            try:
+                j = r.json()
+                self.access_token = j['access_token']
+                self.refresh_token = j['refresh_token']
+                self.token_expires = int(j['expires_in'])
+            except:
+                raise TolinoException('oauth access token request failed.')
+            return
 
         # Login with partner site
         # to retrieve site's cookies within browser session

@@ -86,10 +86,11 @@ reader, and *before* you sign in, open "Inspect element" and go to the
 network tab.  Now sign in as normal, then search for the request to
 a document called "registerhw" (most browsers have a search field at the
 top).  Click that request, scroll down to "request headers", and use
-the content of "hardware_id" as the user name, and "t_auth_token" as the
-password.  Also set use_device = true in the configuration, and make sure
-to use the correct partner ID you used to sign in.  Do not sign out in the
-browser.  tolino-calibre-sync will now use this session to synchronise.
+the content of "hardware_id" as the user name.  Now search for "token", and
+copy the "refresh_token" from the response.  Also set use_device = true in
+the configuration, and make sure to use the correct partner ID you used to
+sign in.  Do not sign out in the browser.  tolino-calibre-sync will now use
+this session to synchronise.
 
 To-Do
 =====
