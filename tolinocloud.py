@@ -33,6 +33,7 @@ import logging
 from pprint import pformat
 import time
 import sys
+from configparser import ConfigParser
 
 class TolinoException(Exception):
     pass
@@ -343,12 +344,13 @@ class TolinoCloud:
         }
     }
 
-    def __init__(self, partner_id, use_device=False, libpath=''):
+    def __init__(self, partner_id, use_device=False, confpath='.tolinoclientrc', libpath=''):
         sys.path.append(libpath)
         import requests
         self.partner_id = partner_id
         self.session = requests.session()
         self.use_device = use_device
+        self.confpath = confpath
 
     def _debug(self, r):
         if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
@@ -385,6 +387,12 @@ class TolinoCloud:
                 self.access_token = j['access_token']
                 self.refresh_token = j['refresh_token']
                 self.token_expires = int(j['expires_in'])
+                #Store new refresh token
+                config = ConfigParser()
+                config.read(self.confpath)
+                config.set('Defaults', 'password', self.refresh_token)
+                with open(self.confpath, 'w') as f:
+                    config.write(f)
             except:
                 raise TolinoException('oauth access token request failed.')
             return

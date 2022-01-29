@@ -121,7 +121,7 @@ local = db.search('')
 
 # Connect and gather list of books online - mainly to ensure IDs from cache file
 # are still valid, otherwise re-upload
-c = TolinoCloud(args.partner, args.use_device, args.libpath)
+c = TolinoCloud(args.partner, args.use_device, path, args.libpath)
 c.login(args.user, args.password)
 c.register()
 remote = c.inventory()

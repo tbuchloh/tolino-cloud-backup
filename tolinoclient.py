@@ -16,7 +16,8 @@ import datetime
 from tolinocloud import TolinoCloud
 
 def inventory(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     inv = c.inventory()
@@ -44,7 +45,8 @@ def inventory(args):
 
 
 def devices(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     devs = c.devices()
     c.logout()
@@ -59,14 +61,16 @@ def devices(args):
         print('last use  : {}'.format(datetime.datetime.fromtimestamp(d['lastusage']/1000.0).strftime('%c')))
 
 def unregister(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.unregister(args.device_id)
     c.logout()
     print('unregistered device {} from tolino cloud.'.format(args.device_id))
 
 def upload(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     document_id = c.upload(args.filename, args.name)
@@ -75,7 +79,8 @@ def upload(args):
     print('uploaded {} to tolino cloud as {}.'.format(args.filename, document_id))
 
 def download(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     fn = c.download(None, args.document_id)
@@ -84,7 +89,8 @@ def download(args):
     print('downloaded {} from tolino cloud to {}.'.format(args.document_id, fn))
 
 def delete(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     c.delete(args.document_id)
@@ -94,7 +100,8 @@ def delete(args):
 
 
 def meta(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     if args.issued != None:
@@ -105,7 +112,8 @@ def meta(args):
     print('successfully modified book {}'.format(args.document_id))
 
 def cover(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     c.cover(args.document_id, args.image)
@@ -114,7 +122,8 @@ def cover(args):
     print('successfully modified cover for book {}'.format(args.document_id))
 
 def add_to_collection(args):
-    c = TolinoCloud(args.partner, args.use_device)
+    global confpath
+    c = TolinoCloud(args.partner, args.use_device, confpath)
     c.login(args.user, args.password)
     c.register()
     c.add_to_collection(args.document_id, args.collection_name)
@@ -129,7 +138,9 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--config', metavar='FILE', default='~/.tolinoclientrc', help='config file (default: .tolinoclientrc)')
 args, remaining_argv = parser.parse_known_args()
 
+confpath = expanduser('~/.tolinoclientrc')
 if args.config:
+    confpath = expanduser(args.config)
     c = configparser.ConfigParser(strict=False, interpolation=None)
     c.read([expanduser(args.config)])
     if c.has_section('Defaults'):
