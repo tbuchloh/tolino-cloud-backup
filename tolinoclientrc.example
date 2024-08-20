@@ -1,8 +1,8 @@
-# edit these, then renamte to .tolinoclientrc
+# edit these, then rename to .tolinoclientrc
 
 [Defaults]
-user =     # your user name at the reseller's web site
+user =     # your user name or email at the reseller's web site
 password = # your password
-partner =  # your device's reseller id, use --partner 0 for a full list
-dbpath =   # path to your calibre library
-libpath = /usr/lib/python3/dist-packages # path to a python installation that has the requests library - needed to work with Calibre binary release
+partner =  # your device's reseller id, use --partner 0 for a full list, use '10' for 'Weltbild.de'.
+download-dir = target # the directory you want to place the downloaded file. May be absolute or relative.
+use_device = false # Set to true, if your reseller make use of CAPTCHAs. If true, set `user` to your `hardware_id` and `password` to the actual `refresh_token`.
