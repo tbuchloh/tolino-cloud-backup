@@ -249,6 +249,40 @@ class TolinoCloud:
             'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
             'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
         },
+        10: {
+            # Weltbild.de
+            'client_id'        : '4c20de744aa8b83b79b692524c7ec6ae',
+            'scope'            : 'ebook_library',
+            'signup_url'       : 'https://www.weltbild.de/konto/registrieren',
+            'profile_url'      : 'https://www.weltbild.de/konto/start',
+            'token_url'        : 'https://api.weltbild.de/rest/oauth2/token',
+            #'login_form_url'   : 'https://www.weltbild.de/oauth2/authorize',
+            'x_buchde.skin_id' : '17',
+            'x_buchde.mandant_id' :'2',
+            'auth_url'         : 'https://www.weltbild.de/oauth2/authorize',
+            'login_url'        : 'https://www.weltbild.de/konto/login',
+            # 'revoke_url'       : 'https://www.thalia.de/de.buch.appservices/api/2004/oauth2/revoke',
+            'login_form': {
+                'username'  : 'unilogin[emailAddress]',
+                'password'  : 'unilogin[password]',
+                'extra'     : {
+                    'unilogin[send]': ''
+                 }
+            },
+            'login_cookie'     : 'sid',
+            'logout_url'       : 'https://www.weltbild.de/konto/abmelden',
+            'reader_url'       : 'https://webreader.mytolino.com/library/index.html#/mybooks/titles',
+            'register_url'     : 'https://bosh.pageplace.de/bosh/rest/v2/registerhw',
+            'devices_url'      : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/list',
+            'unregister_url'   : 'https://bosh.pageplace.de/bosh/rest/handshake/devices/delete',
+            'upload_url'       : 'https://bosh.pageplace.de/bosh/rest/upload',
+            'meta_url'         : 'https://bosh.pageplace.de/bosh/rest/meta',
+            'cover_url'        : 'https://bosh.pageplace.de/bosh/rest/cover',
+            'sync_data_url'    : 'https://bosh.pageplace.de/bosh/rest/sync-data?paths=publications,audiobooks',
+            'delete_url'       : 'https://bosh.pageplace.de/bosh/rest/deletecontent',
+            'inventory_url'    : 'https://bosh.pageplace.de/bosh/rest/inventory/delta',
+            'downloadinfo_url' : 'https://bosh.pageplace.de/bosh/rest//cloud/downloadinfo/{}/{}/type/external-download'
+            },
         13: {
             # Hugendubel.de
             'client_id'        : '4c20de744aa8b83b79b692524c7ec6ae',
@@ -351,6 +385,11 @@ class TolinoCloud:
         self.session = requests.session()
         self.use_device = use_device
         self.confpath = confpath
+        if partner_id == 0:
+            logging.info("Partner ID:")
+            for key, value in self.partner_name.items():
+                logging.info(f"  - partner_id: {key}, name: {value}")
+            raise SystemExit
 
     def _debug(self, r):
         if logging.getLogger().getEffectiveLevel() >= logging.DEBUG:
@@ -441,7 +480,7 @@ class TolinoCloud:
             r = s.get(c['auth_url'], params=params, verify=True, allow_redirects=False)
             self._debug(r)
             try:
-                params = parse_qs(urlparse(r.headers['Location']).query)
+                params = parse_qs(urlparse(r.headers['Location'].replace('#', '')).query)
                 auth_code = params['code'][0]
             except:
                 raise TolinoException('oauth code request failed.')
